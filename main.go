@@ -17,8 +17,6 @@ type Category struct {
 var categories []Category
 var defaultCategory = Category{Name: "General", Items: make([]Item, 0)}
 
-
-
 func (c Category) AddItem(i Item){
 
 }
@@ -52,7 +50,6 @@ func printMainNavigation() {
 func routeMainNavigation(selection int) {
 	switch selection {
 	case 1:
-		
 		addNewCategory()
 	case 2:
 		fmt.Printf("%+v \n", categories)
@@ -66,7 +63,16 @@ func routeMainNavigation(selection int) {
 }
 
 func addNewCategory(){
+	var input string
 	fmt.Printf("Name:")
+	n, _ := fmt.Scanf("%s", &input)
+
+	if n == 0 {
+		return
+	}
+	newCategory := Category{Name: input, Items: make([]Item, 0)}
+	categories = append(categories, newCategory)
+	printMainNavigation()
 }
 
 func addNewItem(){
@@ -76,11 +82,3 @@ func addNewItem(){
 func viewItem(){
 	fmt.Printf("Item Number:")
 }
-// Create user navigation
-	// Categories
-	// Items
-	// Add Category
-	// Delete Category
-	// Add Item To Category
-	// Remove Item From Category
-	// Back
