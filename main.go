@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	// "math/big"
+	"strings"
 )
 
 type Item struct{
@@ -16,10 +17,6 @@ type Category struct {
 
 var categories []Category
 var defaultCategory = Category{Name: "General", Items: make([]Item, 0)}
-
-func (c Category) AddItem(i Item){
-
-}
 
 func main() {
 	var input int
@@ -52,7 +49,7 @@ func routeMainNavigation(selection int) {
 	case 1:
 		addNewCategory()
 	case 2:
-		fmt.Printf("%+v \n", categories)
+		viewCategories()
 	case 3:
 		addNewItem()
 	case 4: 
@@ -72,7 +69,41 @@ func addNewCategory(){
 	}
 	newCategory := Category{Name: input, Items: make([]Item, 0)}
 	categories = append(categories, newCategory)
+	fmt.Printf("Category Added")
 	printMainNavigation()
+}
+
+func viewCategories(){
+	fmt.Printf("%+v \n", categories)
+	fmt.Printf("View category? Y/N")	
+	var input string
+	n, _ := fmt.Scanf("%s", &input)
+	if n == 0  || strings.ToLower(input) == "n" {
+		printMainNavigation()
+	}
+
+	if input == "Y" || input == "y" {
+		fmt.Printf("Enter category name:")	
+		var category string
+		n, _ := fmt.Scanf("%s", &category)
+		if n == 0  {
+		printMainNavigation()
+		}
+		viewACategory(strings.ToLower(category))
+	}
+}
+
+func viewACategory(categoryName string){
+	var selectedCategory Category
+	for _, category := range categories {
+		if strings.EqualFold(category.Name, categoryName) {
+			selectedCategory = category
+		}
+	}
+	fmt.Print(selectedCategory.Name)
+	for _, item := range selectedCategory.Items {
+		fmt.Print(item.Name, " - ", "$", item.Price, "\n")
+	}
 }
 
 func addNewItem(){
