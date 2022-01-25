@@ -4,6 +4,7 @@ import (
 	"fmt"
 	// "math/big"
 	"strings"
+	"sort"
 )
 
 type Item struct{
@@ -61,7 +62,7 @@ func routeMainNavigation(selection int) {
 
 func addNewCategory(){
 	var input string
-	fmt.Printf("Name:")
+	fmt.Printf("Name:\n")
 	n, _ := fmt.Scanf("%s", &input)
 
 	if n == 0 {
@@ -69,7 +70,7 @@ func addNewCategory(){
 	}
 	newCategory := Category{Name: input, Items: make([]Item, 0)}
 	categories = append(categories, newCategory)
-	fmt.Printf("Category Added")
+	fmt.Printf("Category Added\n")
 	printMainNavigation()
 }
 
@@ -83,7 +84,7 @@ func viewCategories(){
 	}
 
 	if input == "Y" || input == "y" {
-		fmt.Printf("Enter category name:")	
+		fmt.Printf("Enter category name:\n")	
 		var category string
 		n, _ := fmt.Scanf("%s", &category)
 		if n == 0  {
@@ -107,7 +108,27 @@ func viewACategory(categoryName string){
 }
 
 func addNewItem(){
-	fmt.Printf("Name:")
+	var itemName string
+	var categoryName string
+	var price float32
+	fmt.Printf("Name:\n")
+	fmt.Scanf("%s", &itemName)
+
+	fmt.Printf("Price:\n")
+	fmt.Scanf("%f", &price)
+
+	newItem := Item{Name: itemName, Price: price}
+	fmt.Scanf("%s", &categoryName)
+
+	categoryIndex := sort.Search(len(categories), func(int) bool {
+		fmt.Printf("Category name:\n")
+		fmt.Scanf("%s", &categoryName)
+		return categoryName != "" && categories[0].Name == categoryName
+	})
+	// append item 
+	categories[categoryIndex].Items = append(categories[categoryIndex].Items, newItem)
+	fmt.Printf("Item added!\n")
+	printMainNavigation()
 }
 
 func viewItem(){
