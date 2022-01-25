@@ -75,8 +75,11 @@ func addNewCategory(){
 }
 
 func viewCategories(){
-	fmt.Printf("%+v \n", categories)
-	fmt.Printf("View category? Y/N")	
+	for _, category := range categories {
+		fmt.Printf("%+v \n", category.Name)
+	}
+
+	fmt.Printf("View category? Y/N\n")	
 	var input string
 	n, _ := fmt.Scanf("%s", &input)
 	if n == 0  || strings.ToLower(input) == "n" {
@@ -106,7 +109,7 @@ func viewACategory(categoryName string){
 		fmt.Print(item.Name, " - ", "$", item.Price, "\n")
 	}
 }
-
+// TODO, fix bug where it skips when a space is involved
 func addNewItem(){
 	var itemName string
 	var categoryName string
@@ -118,14 +121,14 @@ func addNewItem(){
 	fmt.Scanf("%f", &price)
 
 	newItem := Item{Name: itemName, Price: price}
+
+	fmt.Printf("Category name:\n")
 	fmt.Scanf("%s", &categoryName)
 
 	categoryIndex := sort.Search(len(categories), func(int) bool {
-		fmt.Printf("Category name:\n")
-		fmt.Scanf("%s", &categoryName)
 		return categoryName != "" && categories[0].Name == categoryName
 	})
-	// append item 
+
 	categories[categoryIndex].Items = append(categories[categoryIndex].Items, newItem)
 	fmt.Printf("Item added!\n")
 	printMainNavigation()
