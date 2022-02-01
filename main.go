@@ -2,9 +2,6 @@ package main
 
 import (
 	"fmt"
-	// "strconv"
-
-	// "math/big"
 	"sort"
 	"strings"
 )
@@ -110,14 +107,23 @@ func viewCategories(){
 
 func viewACategory(categoryName string){
 	var selectedCategory Category
-	for _, category := range categories {
+	var selectedCategoryIndex int
+	for i, category := range categories {
 		if strings.EqualFold(category.Name, categoryName) {
 			selectedCategory = category
+			selectedCategoryIndex = i
 		}
 	}
 	fmt.Print(selectedCategory.Name)
 	for _, item := range selectedCategory.Items {
 		fmt.Print(item.Name, " - ", "$", item.Price, "\n")
+	}
+
+	fmt.Print("Delete an item? Y/N?\n")
+	var input string
+	fmt.Scanf("%s", &input)
+	if(input == "Y"){
+		deleteItem(selectedCategory, selectedCategoryIndex)
 	}
 }
 
@@ -126,7 +132,7 @@ func deleteCategory(){
 	for i, category := range categories {
 		fmt.Printf("%d). %+v \n", i + 1, category.Name)
 	}
-	fmt.Print("Which category number would you like to delete?")
+	fmt.Print("Which category number would you like to delete?\n")
 	fmt.Scanf("%d", &category)
 
 	newCategories := make([]Category, 0) 
@@ -155,11 +161,14 @@ func addNewItem(){
 	newItem := Item{Name: itemName, Price: price}
 
 	fmt.Printf("Category name:\n")
-	fmt.Scanf("%s", &categoryName)
+	fmt.Scanf("%s\n", &categoryName)
 
-	categoryIndex := sort.Search(len(categories), func(int) bool {
+	fmt.Printf("%d\n", len(categories))
+	categoryIndex := sort.Search(len(categories) - 1, func(int) bool {
 		return categoryName != "" && categories[0].Name == categoryName
 	})
+
+	fmt.Printf("%d\n", categoryIndex)
 
 	categories[categoryIndex].Items = append(categories[categoryIndex].Items, newItem)
 	fmt.Printf("Item added!\n")
@@ -170,6 +179,27 @@ func viewItem(){
 	fmt.Printf("Item Number:")
 }
 
-func deleteItem(){
+func deleteItem(category Category, categoryIndex int){
+	var item int
+	for i, item := range category.Items {
+		fmt.Printf("%d). %+v \n", i + 1, item.Name)
+	}
+	fmt.Print("Which item number would you like to delete?\n")
+	fmt.Scanf("%d", &item)
 
+	newItems := make([]Item, 0) 
+
+	for i := range category.Items{
+		if(i != item - 1){
+			newItems = append(newItems, category.Items[i])
+		}
+	}
+
+	categories[categoryIndex].Items = newItems
+	for _, item := range category.Items {
+		fmt.Print(item.Name, " - ", "$", item.Price, "\n")
+	}
+
+	fmt.Print("Item deleted.\n")
+	printMainNavigation()
 }
