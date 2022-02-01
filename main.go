@@ -74,6 +74,7 @@ func addNewCategory(){
 }
 
 func viewCategories(){
+	fmt.Println("==== Categories ====")
 	for _, category := range categories {
 		fmt.Printf("%+v \n", category.Name)
 	}
@@ -114,7 +115,7 @@ func viewACategory(categoryName string){
 			selectedCategoryIndex = i
 		}
 	}
-	fmt.Print(selectedCategory.Name)
+	fmt.Printf("==== %v Items ====\n", selectedCategory.Name)
 	for _, item := range selectedCategory.Items {
 		fmt.Print(item.Name, " - ", "$", item.Price, "\n")
 	}
