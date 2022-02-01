@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	// "strconv"
+
 	// "math/big"
-	"strings"
 	"sort"
+	"strings"
 )
 
 type Item struct{
@@ -79,21 +81,30 @@ func viewCategories(){
 		fmt.Printf("%+v \n", category.Name)
 	}
 
-	fmt.Printf("View category? Y/N\n")	
-	var input string
-	n, _ := fmt.Scanf("%s", &input)
-	if n == 0  || strings.ToLower(input) == "n" {
+	fmt.Printf("1. View category\n 2. Delete category\n 3. Go back\n")	
+	var input int
+	n, _ := fmt.Scanf("%d", &input)
+
+	if n == 0 {
 		printMainNavigation()
+		return
 	}
 
-	if input == "Y" || input == "y" {
-		fmt.Printf("Enter category name:\n")	
-		var category string
-		n, _ := fmt.Scanf("%s", &category)
-		if n == 0  {
-		printMainNavigation()
-		}
-		viewACategory(strings.ToLower(category))
+	switch(input){
+		case 1:
+			fmt.Printf("Enter category name:\n")	
+			var category string
+			n, _ := fmt.Scanf("%s", &category)
+			if n == 0  {
+			printMainNavigation()
+			}
+			viewACategory(strings.ToLower(category))
+		case 2:
+			deleteCategory()
+		case 3:
+			printMainNavigation()
+		default:
+			printMainNavigation()
 	}
 }
 
@@ -108,6 +119,27 @@ func viewACategory(categoryName string){
 	for _, item := range selectedCategory.Items {
 		fmt.Print(item.Name, " - ", "$", item.Price, "\n")
 	}
+}
+
+func deleteCategory(){
+	var category int
+	for i, category := range categories {
+		fmt.Printf("%d). %+v \n", i + 1, category.Name)
+	}
+	fmt.Print("Which category number would you like to delete?")
+	fmt.Scanf("%d", &category)
+
+	newCategories := make([]Category, 0) 
+
+	for i := range categories {
+		if(i != category - 1){
+			newCategories = append(newCategories, categories[i])
+		}
+	}
+
+	categories = newCategories
+	fmt.Print("Category deleted.")
+	viewCategories()
 }
 // TODO, fix bug where it skips when a space is involved
 func addNewItem(){
@@ -136,4 +168,8 @@ func addNewItem(){
 
 func viewItem(){
 	fmt.Printf("Item Number:")
+}
+
+func deleteItem(){
+
 }
